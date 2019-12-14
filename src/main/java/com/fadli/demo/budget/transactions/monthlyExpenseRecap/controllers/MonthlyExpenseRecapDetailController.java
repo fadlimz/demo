@@ -2,8 +2,10 @@ package com.fadli.demo.budget.transactions.monthlyExpenseRecap.controllers;
 
 import com.fadli.demo.base.constants.UriConstants;
 import com.fadli.demo.base.responses.ApiResponse;
+import com.fadli.demo.budget.transactions.monthlyExpenseRecap.models.MonthlyExpenseRecap;
 import com.fadli.demo.budget.transactions.monthlyExpenseRecap.models.MonthlyExpenseRecapDetail;
 import com.fadli.demo.budget.transactions.monthlyExpenseRecap.services.MonthlyExpenseRecapDetailService;
+import com.fadli.demo.budget.transactions.monthlyExpenseRecap.services.MonthlyExpenseRecapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,7 @@ import java.util.List;
 public class MonthlyExpenseRecapDetailController {
 
     @Autowired private MonthlyExpenseRecapDetailService monthlyExpenseRecapDetailService;
+    @Autowired private MonthlyExpenseRecapService monthlyExpenseRecapService;
 
     @RequestMapping(method = RequestMethod.GET)
     public ApiResponse getList(@RequestParam String headerId) {
@@ -31,6 +34,9 @@ public class MonthlyExpenseRecapDetailController {
 
     @RequestMapping(method = RequestMethod.PUT)
     public ApiResponse edit(@RequestBody MonthlyExpenseRecapDetail entity) {
+        MonthlyExpenseRecap rootEntity = monthlyExpenseRecapService.findById(entity.getMonthlyExpenseRecap().getId());
+
+        monthlyExpenseRecapDetailService.initRootEntity(rootEntity);
         MonthlyExpenseRecapDetail result = monthlyExpenseRecapDetailService.edit(entity);
 
         return ApiResponse.data("monthlyExpenseRecapDetail", result);
@@ -38,6 +44,9 @@ public class MonthlyExpenseRecapDetailController {
 
     @RequestMapping(method = RequestMethod.DELETE)
     public ApiResponse delete(@RequestBody MonthlyExpenseRecapDetail entity) {
+        MonthlyExpenseRecap rootEntity = monthlyExpenseRecapService.findById(entity.getMonthlyExpenseRecap().getId());
+
+        monthlyExpenseRecapDetailService.initRootEntity(rootEntity);
         monthlyExpenseRecapDetailService.delete(entity);
 
         return ApiResponse.ok();

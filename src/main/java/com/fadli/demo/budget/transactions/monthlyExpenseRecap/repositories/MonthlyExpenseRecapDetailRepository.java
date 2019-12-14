@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -47,5 +48,22 @@ public class MonthlyExpenseRecapDetailRepository extends BaseRepository<MonthlyE
         query.setParameter("monthlyExpenseRecapId", monthlyExpenseRecapId);
 
         return query.getResultList();
+    }
+
+    public Double getTotalExpense(String monthlyExpenseRecapId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT SUM(expense_value) \n");
+        sb.append("FROM monthly_expense_recap_detail \n");
+        sb.append("WHERE monthly_expense_recap = :monthlyExpenseRecapId \n");
+
+        Query query = em.createNativeQuery(sb.toString());
+        query.setParameter("monthlyExpenseRecapId", monthlyExpenseRecapId);
+
+        Double result = (Double) query.getSingleResult();
+        if (result != null) {
+            return result.doubleValue();
+        } else {
+            return 0D;
+        }
     }
 }

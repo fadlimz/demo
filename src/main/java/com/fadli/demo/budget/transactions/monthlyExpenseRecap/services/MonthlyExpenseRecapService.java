@@ -2,6 +2,8 @@ package com.fadli.demo.budget.transactions.monthlyExpenseRecap.services;
 
 import com.fadli.demo.base.constants.TransactionTypeConstants;
 import com.fadli.demo.base.parentClasses.BaseService;
+import com.fadli.demo.base.parentClasses.TransactionService;
+import com.fadli.demo.base.utils.Calculation;
 import com.fadli.demo.base.utils.DateUtil;
 import com.fadli.demo.budget.masters.salary.services.SalaryService;
 import com.fadli.demo.budget.transactions.monthlyExpenseRecap.models.MonthlyExpenseRecap;
@@ -14,15 +16,21 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class MonthlyExpenseRecapService extends BaseService<MonthlyExpenseRecap> {
+public class MonthlyExpenseRecapService extends TransactionService<MonthlyExpenseRecap> {
 
     @Autowired private MonthlyExpenseRecapRepository monthlyExpenseRecapRepository;
     @Autowired private SalaryService salaryService;
     @Autowired private TransactionTypeService transactionTypeService;
+    @Autowired private MonthlyExpenseRecapDetailService monthlyExpenseRecapDetailService;
 
     @Override
     protected void initRepository() {
         repository = monthlyExpenseRecapRepository;
+    }
+
+    @Override
+    protected void setTransactionType(MonthlyExpenseRecap entity) {
+        entity.setTransactionType(transactionTypeService.findByBk(TransactionTypeConstants.MONTHLY_EXPENSE_RECAP));
     }
 
     public List<MonthlyExpenseRecap> getList(Map<String, String> parameter) {
@@ -61,7 +69,6 @@ public class MonthlyExpenseRecapService extends BaseService<MonthlyExpenseRecap>
 
     @Override
     protected void defineValueOnAdd(MonthlyExpenseRecap entity) {
-        entity.setTransactionType(transactionTypeService.findByBk(TransactionTypeConstants.MONTHLY_EXPENSE_RECAP));
         entity.setTransactionDate(DateUtil.getSystemDate());
     }
 
@@ -69,5 +76,28 @@ public class MonthlyExpenseRecapService extends BaseService<MonthlyExpenseRecap>
     protected void setEditedValues(MonthlyExpenseRecap entity, MonthlyExpenseRecap entityFromDb) {
         entityFromDb.setTotalExpenseValue(entity.getTotalExpenseValue());
         entityFromDb.setOutstandingValue(entity.getOutstandingValue());
+    }
+
+    @Override
+    protected MonthlyExpenseRecap doWhenConfirmation(MonthlyExpenseRecap entity) {
+        MonthlyExpenseRecap entityFromDb = findById(entity.getId());
+
+        Double totalExpense = monthlyExpenseRecapDetailService.getTotalExpense(entityFromDb.getId());
+        Double outstandingValue = new Calculation(entityFromDb.getSalary().getSalaryNettoValue()).substract(totalExpense);
+
+        entityFromDb.setTotalExpenseValue(totalExpense);
+        entityFromDb.setOutstandingValue(outstandingValue);
+
+        return entityFromDb;
+    }
+
+    @Override
+    protected MonthlyExpenseRecap doWhenCancelConfirmation(MonthlyExpenseRecap entity) {
+        MonthlyExpenseRecap entityFromDb = findById(entity.getId());
+
+        entityFromDb.setTotalExpenseValue(null);
+        entityFromDb.setOutstandingValue(null);
+
+        return entityFromDb;
     }
 }

@@ -5,8 +5,13 @@ import com.fadli.demo.base.parentClasses.BaseService;
 import com.fadli.demo.common.user.models.User;
 import com.fadli.demo.common.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Service
@@ -48,4 +53,17 @@ public class UserService extends BaseService<User> {
         entityFromDb.setUserName(entity.getUserName());
         entityFromDb.setPassword(entity.getPassword());
     }
+
+    @Override
+    protected void defineValueOnAdd(User entity) {
+       setPassword(entity);
+
+    }
+
+    private void setPassword(User entity) {
+        String encodedPassword = new BCryptPasswordEncoder().encode(entity.getPassword());
+
+        entity.setPassword(encodedPassword);
+    }
+
 }

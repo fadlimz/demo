@@ -19,7 +19,6 @@ public class MonthlyExpenseRecapController {
     @RequestMapping(method = RequestMethod.GET, value = UriConstants.ID)
     public ApiResponse get(@PathVariable String id) {
         MonthlyExpenseRecap result = monthlyExpenseRecapService.findById(id);
-        result.setMonthlyExpenseRecapDetails(null);
 
         return ApiResponse.data("monthlyExpenseRecap", result);
     }
@@ -50,5 +49,19 @@ public class MonthlyExpenseRecapController {
         monthlyExpenseRecapService.delete(entity);
 
         return ApiResponse.ok();
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/confirm")
+    public ApiResponse confirm(@RequestBody MonthlyExpenseRecap entity) {
+        MonthlyExpenseRecap result = monthlyExpenseRecapService.confirm(entity);
+
+        return ApiResponse.data("monthlyExpenseRecap", result);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/cancel-confirm")
+    public ApiResponse cancelConfirm(@RequestBody MonthlyExpenseRecap entity) {
+        MonthlyExpenseRecap result = monthlyExpenseRecapService.cancelConfirm(entity);
+
+        return ApiResponse.data("monthlyExpenseRecap", result);
     }
 }

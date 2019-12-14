@@ -1,5 +1,6 @@
 package com.fadli.demo.common.user.models;
 
+import com.fadli.demo.base.constants.BaseConstants;
 import com.fadli.demo.base.parentClasses.BaseEntity;
 
 import javax.persistence.Column;

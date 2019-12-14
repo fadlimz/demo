@@ -23,6 +23,10 @@ public class MonthlyExpenseRecapDetail extends BaseEntity {
     private String description;
 
     public MonthlyExpenseRecap getMonthlyExpenseRecap() {
+        String id = monthlyExpenseRecap.getId();
+        monthlyExpenseRecap = new MonthlyExpenseRecap();
+        monthlyExpenseRecap.setId(id);
+
         return monthlyExpenseRecap;
     }
 

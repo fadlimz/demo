@@ -1,6 +1,6 @@
 package com.fadli.demo.budget.transactions.monthlyExpenseRecap.services;
 
-import com.fadli.demo.base.parentClasses.BaseDetailService;
+import com.fadli.demo.base.parentClasses.TransactionDetailService;
 import com.fadli.demo.budget.transactions.monthlyExpenseRecap.models.MonthlyExpenseRecap;
 import com.fadli.demo.budget.transactions.monthlyExpenseRecap.models.MonthlyExpenseRecapDetail;
 import com.fadli.demo.budget.transactions.monthlyExpenseRecap.repositories.MonthlyExpenseRecapDetailRepository;
@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class MonthlyExpenseRecapDetailService extends BaseDetailService<MonthlyExpenseRecapDetail, MonthlyExpenseRecap> {
+public class MonthlyExpenseRecapDetailService extends TransactionDetailService<MonthlyExpenseRecapDetail, MonthlyExpenseRecap> {
 
     @Autowired private MonthlyExpenseRecapDetailRepository monthlyExpenseRecapDetailRepository;
     @Autowired private MonthlyExpenseRecapRepository monthlyExpenseRecapRepository;
@@ -25,6 +25,10 @@ public class MonthlyExpenseRecapDetailService extends BaseDetailService<MonthlyE
 
     public List<MonthlyExpenseRecapDetail> getList(String monthlyExpenseRecapId) {
         return monthlyExpenseRecapDetailRepository.getList(monthlyExpenseRecapId);
+    }
+
+    public Double getTotalExpense(String monthlyExpenseRecapId) {
+        return monthlyExpenseRecapDetailRepository.getTotalExpense(monthlyExpenseRecapId);
     }
 
     @Override

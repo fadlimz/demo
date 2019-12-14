@@ -1,6 +1,7 @@
 package com.fadli.demo.budget.transactions.monthlyExpenseRecap.models;
 
 import com.fadli.demo.base.parentClasses.BaseEntity;
+import com.fadli.demo.base.parentClasses.TransactionEntity;
 import com.fadli.demo.budget.masters.salary.models.Salary;
 import com.fadli.demo.common.transactionType.models.TransactionType;
 
@@ -10,24 +11,14 @@ import java.util.List;
 
 @Entity
 @Table(name = "monthly_expense_recap", uniqueConstraints = @UniqueConstraint(columnNames = {"salary_id", "transaction_number", "transaction_type", "transaction_year_month"}))
-public class MonthlyExpenseRecap extends BaseEntity {
+public class MonthlyExpenseRecap extends TransactionEntity {
 
     @OneToOne
     @JoinColumn(name = "salary_id")
     private Salary salary;
 
-    @OneToOne
-    @JoinColumn(name = "transaction_type")
-    private TransactionType transactionType;
-
-    @Column(name = "transaction_number")
-    private String transactionNumber;
-
     @Column(name = "transaction_date")
     private Date transactionDate;
-
-    @Column(name = "transaction_year_month")
-    private String transactionYearMonth;
 
     @Column(name = "total_expense_value")
     private Double totalExpenseValue;
@@ -46,36 +37,12 @@ public class MonthlyExpenseRecap extends BaseEntity {
         this.salary = salary;
     }
 
-    public TransactionType getTransactionType() {
-        return transactionType;
-    }
-
-    public void setTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
-    }
-
-    public String getTransactionNumber() {
-        return transactionNumber;
-    }
-
-    public void setTransactionNumber(String transactionNumber) {
-        this.transactionNumber = transactionNumber;
-    }
-
     public Date getTransactionDate() {
         return transactionDate;
     }
 
     public void setTransactionDate(Date transactionDate) {
         this.transactionDate = transactionDate;
-    }
-
-    public String getTransactionYearMonth() {
-        return transactionYearMonth;
-    }
-
-    public void setTransactionYearMonth(String transactionYearMonth) {
-        this.transactionYearMonth = transactionYearMonth;
     }
 
     public Double getTotalExpenseValue() {

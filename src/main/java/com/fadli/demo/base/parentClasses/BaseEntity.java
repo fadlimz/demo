@@ -7,10 +7,10 @@ import java.util.UUID;
 public class BaseEntity {
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "id")
     private String id;
 
-    @Column(name = "VERSION")
+    @Column(name = "version")
     private Long version;
 
     @PrePersist
