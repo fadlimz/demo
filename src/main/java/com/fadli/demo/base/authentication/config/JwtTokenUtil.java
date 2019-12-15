@@ -17,6 +17,7 @@ import java.util.function.Function;
 public class JwtTokenUtil {
 
     private static final long serialVersionUID = -2550185165626007488L;
+    private final String BEARER = "Bearer ";
 
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
@@ -73,11 +74,11 @@ public class JwtTokenUtil {
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {
 
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+        return BEARER.concat(Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
 
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
+                .signWith(SignatureAlgorithm.HS512, secret).compact());
 
     }
 
