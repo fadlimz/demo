@@ -70,6 +70,8 @@ public class MonthlyExpenseRecapService extends TransactionService<MonthlyExpens
     @Override
     protected void defineValueOnAdd(MonthlyExpenseRecap entity) {
         entity.setTransactionDate(DateUtil.getSystemDate());
+
+        setTransactionNumber(entity);
     }
 
     @Override
@@ -99,5 +101,18 @@ public class MonthlyExpenseRecapService extends TransactionService<MonthlyExpens
         entityFromDb.setOutstandingValue(null);
 
         return entityFromDb;
+    }
+
+    private void setTransactionNumber(MonthlyExpenseRecap entity) {
+        String user = entity.getSalary().getUser().getUserCode().toUpperCase();
+        String month = entity.getTransactionYearMonth().substring(4, 6);
+        String year = entity.getTransactionYearMonth().substring(0, 4);
+
+        String transactionNumber = TransactionTypeConstants.MONTHLY_EXPENSE_RECAP
+                                    .concat("/").concat(user)
+                                    .concat("/").concat(month)
+                                    .concat("/").concat(year);
+
+        entity.setTransactionNumber(transactionNumber);
     }
 }
